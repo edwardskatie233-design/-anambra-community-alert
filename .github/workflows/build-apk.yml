@@ -1,50 +1,31 @@
 name: Build Anambra Community Alert APK
-
 on:
   push:
-    branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
-  workflow_dispatch:
+    branches: [ main ]
 
 jobs:
   build:
-    name: Build Flutter APK
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Java JDK 17
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v4
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: 'zulu'
           java-version: '17'
-          cache: 'gradle'
-
-      - name: Set up Flutter SDK
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.22.0'
           channel: 'stable'
-          cache: true
-
-      - name: Generate Android project scaffolding if missing
-        run: |
-          if [ ! -f "android/build.gradle" ] && [ ! -f "android/build.gradle.kts" ]; then
-            echo "Generating Android scaffolding..."
-            flutter create --platforms=android --org=com.example .
-          fi
-
-      - name: Get Flutter dependencies
+      - name: Create Android folder if missing
+        run: flutter create . --platforms=android
+      - name: Get dependencies
         run: flutter pub get
-
-      - name: Build Android Release APK
+      - name: Build APK
         run: flutter build apk --release
-
-      - name: Upload APK Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: anambra-community-alert-release-apk
+          name: anambra-alert-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-          if-no-files-found: error
