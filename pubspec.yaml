@@ -1,34 +1,21 @@
-name: Build Anambra Community Alert APK
-on:
-  push:
-    branches: [ main ]
+name: anambra_community_alert
+description: Anambra Community Alert - Emergency Alert App
+publish_to: 'none'
+version: 1.0.0+1
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-          
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.22.0'
-          channel: 'stable'
-          
-      - name: Get dependencies
-        run: flutter pub get
-        
-      - name: Build APK
-        run: flutter build apk --release
-        
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: anambra-alert-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+environment:
+  sdk: ^3.4.0
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
